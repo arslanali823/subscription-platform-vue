@@ -1,50 +1,46 @@
 <template>
   <v-container>
     <v-row>
-      <v-col class="col-12 text-center">
-        <h1 class="primary--text">Subscription Platform</h1>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col class="text-center">
-        <v-progress-circular
-            indeterminate
-            color="primary"
-            :width="7"
-            :size="70"
-            v-if="loading"
-        ></v-progress-circular>
+      <v-col class="text-center" cols="12">
+        <Loader :loading="loading" />
+        <Snackbar />
       </v-col>
     </v-row>
     <v-row v-if="!loading">
-      <v-col>
-        <v-card class="mx-auto" max-width="400">
-          <v-list>
-            <template v-if="websites.length">
-              <v-list-item two-line v-for="website in websites" :key="website.slug">
-                <v-list-item-title v-text="website.title"></v-list-item-title>
-                <v-list-item-subtitle v-text="website.description"></v-list-item-subtitle>
-              </v-list-item>
-            </template>
-            <v-list-item v-else>
-              <v-list-item-title>No Website Found!</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-col>
+      <WebsitesList :websites="websites" @selected-website="setSelectedWebsite"/>
+      <SubscriptionForm v-if="selectedWebsite" :selectedWebsite="selectedWebsite"/>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import Snackbar from "@/components/Shared/Snackbar";
+import WebsitesList from "@/components/Websites/WebsitesList";
+import SubscriptionForm from "@/components/Websites/SubscriptionForm";
+import Loader from "@/components/Shared/Loader";
+
 export default {
   name: "Home",
+  components: {Loader, SubscriptionForm, WebsitesList, Snackbar},
   computed: {
     websites() {
-      return this.$store.getters.websites
+      return this.$store.state.websites
     },
     loading() {
-      return this.$store.getters.loading
+      return this.$store.state.loading
+    },
+    snackbar() {
+      return this.$store.state.snackbar
+    }
+  },
+  data() {
+    return {
+      selectedWebsite: null,
+    }
+  },
+  methods: {
+    setSelectedWebsite(website) {
+      this.selectedWebsite = website
     }
   }
 }
