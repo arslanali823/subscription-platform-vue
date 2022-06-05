@@ -12,7 +12,7 @@
             label
             text-color="white"
         >
-          CLICK ON LIST TO SUBSCRIBE
+          CLICK ON WEBSITE LIST TO SUBSCRIBE
         </v-chip>
         <v-list-item two-line v-for="website in websites" :key="website.slug" @click="$emit('selected-website', website)">
           <v-list-item-content>
